@@ -8,6 +8,7 @@ export type TaskOptions = {
     title: string;
     fn: (subTask: Omit<SubTask, "render">) => Promise<unknown>;
   }>;
+  errorHandler?: (err: unknown) => void;
 };
 
 export async function task<T>(opts: TaskOptions): Promise<void> {
@@ -28,6 +29,10 @@ export async function task<T>(opts: TaskOptions): Promise<void> {
     s.stop();
   } catch (err) {
     s.error(color.red(`${opts.title}`));
-    throw err;
+    if (opts.errorHandler) {
+      opts.errorHandler(err);
+    } else {
+      throw err;
+    }
   }
 }

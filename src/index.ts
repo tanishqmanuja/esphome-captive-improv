@@ -22,7 +22,9 @@ const flags = program.opts();
 const config = await loadConfig(flags);
 
 process.stdout.write("\n");
-intro(color.bgBlueBright(color.bold(" Improv // via Captive Portal ")));
+intro(
+  color.bgBlueBright(color.bold(color.black(" Improv // via Captive Portal "))),
+);
 log.message(color.gray(`Version: ${version}`));
 log.message(color.gray(`Config : ${flags.configFile}`), { spacing: 0 });
 log.message(color.gray(`Target : ${config.ap.ssid}`), { spacing: 0 });
@@ -82,6 +84,11 @@ await task({
       },
     },
   ],
+  errorHandler: () => {
+    note("Check if Captive Portal AP exists and is reachable", "Note.", {});
+    outro("Check AP and try again.");
+    process.exit(1);
+  },
 });
 
 /* Provision */
@@ -92,11 +99,13 @@ spin.start("Provisioning device");
 try {
   const result = await sendWifiCreds(config.wifi.ssid, config.wifi.password);
   match(result)
-    .with("sent", () =>
-      spin.stop(
-        `Provisioning device\n${color.gray("│  ↳")} ${color.gray("Credentials")} ${color.gray("...")} ${color.green("SENT")}`,
-      ),
-    )
+    .with("sent", () => {
+      spin.clear();
+      log.success(
+        `Provisioning device\n${color.gray("↳")} ${color.gray("Credentials")} ${color.gray("...")} ${color.green("SENT")}`,
+        { spacing: 0 },
+      );
+    })
     .with("failed", () =>
       spin.error(
         `Provisioning device\n${color.gray("│  ↳")} ${color.red("Unknown error")}`,
