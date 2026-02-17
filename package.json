@@ -4,6 +4,9 @@
   "type": "module",
   "private": true,
   "version": "0.0.1",
+  "bin": {
+    "captive-improv": "./src/index.ts"
+  },
   "scripts": {
     "start": "bun src/index.ts"
   },
