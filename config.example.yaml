@@ -1,0 +1,8 @@
+interface:
+  mac: D0:37:45:F1:92:F4
+ap:
+  ssid: dimled-mini-244190
+  password: tqlabs.in
+wifi:
+  ssid: SomeSSID
+  password: SomePassword
